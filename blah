@@ -1,0 +1,595 @@
+autoconf/config.guess:	int main (int argc, char *argv[]) {
+autoconf/config.guess:	int main (argc, argv) int argc; char *argv[]; {
+autoconf/config.guess:		main()
+autoconf/config.guess:		int main ()
+autoconf/config.guess:	main ()
+autoconf/config.guess:main ()
+autoconf/autom4te.cache/traces.0:  echo 'int main () { return 0; }' > conftest.$ac_ext
+autoconf/autom4te.cache/traces.0:LIBTOOL_DEPS="$ac_aux_dir/ltmain.sh"
+autoconf/autom4te.cache/traces.0:ltmain="$ac_aux_dir/ltmain.sh"
+autoconf/autom4te.cache/traces.0:int main ()
+autoconf/autom4te.cache/traces.0:if test -f "$ltmain" && test -n "$tagnames"; then
+autoconf/autom4te.cache/traces.0:  # func_win32_libid is a shell function defined in ltmain.sh
+autoconf/autom4te.cache/traces.0:lt_simple_link_test_code='int main(){return(0);}\n'
+autoconf/autom4te.cache/traces.0:lt_simple_link_test_code='int main(int, char *[[]]) { return(0); }\n'
+autoconf/autom4te.cache/traces.0:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/autom4te.cache/traces.0:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/autom4te.cache/traces.0:lt_simple_link_test_code='public class conftest { public static void main(String[[]] argv) {}; }\n'
+autoconf/autom4te.cache/traces.0:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/autom4te.cache/traces.0:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/autom4te.cache/traces.0:# libtool distribution, otherwise you forgot to ship ltmain.sh
+autoconf/autom4te.cache/traces.0:# no rules to generate ltmain.sh.
+autoconf/autom4te.cache/traces.0:if test -f "$ltmain"; then
+autoconf/autom4te.cache/traces.0:# NOTE: Changes made to this file will be lost: look at ltmain.sh.
+autoconf/autom4te.cache/traces.0:  sed '$q' "$ltmain" >> "$cfgfile" || (rm -f "$cfgfile"; exit 1)
+autoconf/autom4te.cache/traces.0:  ltmain_in=`echo $ltmain | sed -e 's/\.sh$/.in/'`
+autoconf/autom4te.cache/traces.0:  if test -f "$ltmain_in"; then
+autoconf/autom4te.cache/traces.0:    test -f Makefile && make "$ltmain"
+autoconf/autom4te.cache/traces.0:int main(){nm_test_var='a';nm_test_func();return(0);}
+autoconf/autom4te.cache/traces.0:	  eval "$lt_cv_sys_global_symbol_to_cdecl"' < "$nlist" | grep -v main >> conftest.$ac_ext'
+autoconf/autom4te.cache/traces.0:	  $SED "s/^$symcode$symcode* \(.*\) \(.*\)$/  {\"\2\", (lt_ptr_t) \&\2},/" < "$nlist" | grep -v main >> conftest.$ac_ext
+autoconf/autom4te.cache/traces.0:	  # _LT_AC_TAGVAR(lt_prog_compiler_static, $1)="--no_auto_instantiation -u __main -u __premain -u _abort -r $COOL_DIR/lib/libOrb.a $MVME_DIR/lib/CC/libC.a $MVME_DIR/lib/classix/libcx.s.a"
+autoconf/autom4te.cache/traces.0:	  tmp_addflag=' $pic_flag -Mnomain' ;;
+autoconf/autom4te.cache/traces.0:	  tmp_addflag=' -i_dynamic -nofor_main' ;;
+autoconf/autom4te.cache/traces.0:	  tmp_addflag=' -nofor_main' ;;
+autoconf/autom4te.cache/traces.0:      # Tell ltmain to make .lib files, not .a files.
+autoconf/autom4te.cache/traces.0:      # Tell ltmain to make .dll files, not .so files.
+autoconf/autom4te.cache/traces.0:  echo "  global: main;" >> "$tmp/export.map"
+autoconf/autom4te.cache/traces.0:int main(){nm_test_func;return 0;}
+autoconf/autom4te.cache/output.1:@%:@ Report bugs to <bugs@yourdomain>.
+autoconf/autom4te.cache/output.1:    $as_echo "$0: Please tell bug-autoconf@gnu.org and bugs@yourdomain
+autoconf/autom4te.cache/output.1:PACKAGE_BUGREPORT='bugs@yourdomain'
+autoconf/autom4te.cache/output.1:Report bugs to <bugs@yourdomain>.
+autoconf/autom4te.cache/output.1:## Report this to bugs@yourdomain ##
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:  echo 'int main () { return 0; }' > conftest.$ac_ext
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:  echo "  global: main;" >> "$tmp/export.map"
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:int main(){nm_test_var='a';nm_test_func();return(0);}
+autoconf/autom4te.cache/output.1:	  eval "$lt_cv_sys_global_symbol_to_cdecl"' < "$nlist" | grep -v main >> conftest.$ac_ext'
+autoconf/autom4te.cache/output.1:	  $SED "s/^$symcode$symcode* \(.*\) \(.*\)$/  {\"\2\", (lt_ptr_t) \&\2},/" < "$nlist" | grep -v main >> conftest.$ac_ext
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:int main(){nm_test_func;return 0;}
+autoconf/autom4te.cache/output.1:int main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -limagehlp" >&5
+autoconf/autom4te.cache/output.1:$as_echo_n "checking for main in -limagehlp... " >&6; }
+autoconf/autom4te.cache/output.1:if ${ac_cv_lib_imagehlp_main+:} false; then :
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:return main ();
+autoconf/autom4te.cache/output.1:  ac_cv_lib_imagehlp_main=yes
+autoconf/autom4te.cache/output.1:  ac_cv_lib_imagehlp_main=no
+autoconf/autom4te.cache/output.1:{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_imagehlp_main" >&5
+autoconf/autom4te.cache/output.1:$as_echo "$ac_cv_lib_imagehlp_main" >&6; }
+autoconf/autom4te.cache/output.1:if test "x$ac_cv_lib_imagehlp_main" = xyes; then :
+autoconf/autom4te.cache/output.1:  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lpsapi" >&5
+autoconf/autom4te.cache/output.1:$as_echo_n "checking for main in -lpsapi... " >&6; }
+autoconf/autom4te.cache/output.1:if ${ac_cv_lib_psapi_main+:} false; then :
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:return main ();
+autoconf/autom4te.cache/output.1:  ac_cv_lib_psapi_main=yes
+autoconf/autom4te.cache/output.1:  ac_cv_lib_psapi_main=no
+autoconf/autom4te.cache/output.1:{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_psapi_main" >&5
+autoconf/autom4te.cache/output.1:$as_echo "$ac_cv_lib_psapi_main" >&6; }
+autoconf/autom4te.cache/output.1:if test "x$ac_cv_lib_psapi_main" = xyes; then :
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:      int main() {
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __main in -lgcc" >&5
+autoconf/autom4te.cache/output.1:$as_echo_n "checking for __main in -lgcc... " >&6; }
+autoconf/autom4te.cache/output.1:if ${ac_cv_lib_gcc___main+:} false; then :
+autoconf/autom4te.cache/output.1:char __main ();
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:return __main ();
+autoconf/autom4te.cache/output.1:  ac_cv_lib_gcc___main=yes
+autoconf/autom4te.cache/output.1:  ac_cv_lib_gcc___main=no
+autoconf/autom4te.cache/output.1:{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_gcc___main" >&5
+autoconf/autom4te.cache/output.1:$as_echo "$ac_cv_lib_gcc___main" >&6; }
+autoconf/autom4te.cache/output.1:if test "x$ac_cv_lib_gcc___main" = xyes; then :
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:   The main things grep needs to know about mmap are:
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:int main() {
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:main ()
+autoconf/autom4te.cache/output.1:Report bugs to <bugs@yourdomain>."
+autoconf/autom4te.cache/output.1:# FIXME: do we really want to maintain this feature?
+autoconf/autom4te.cache/output.0:@%:@ Report bugs to <bugs@yourdomain>.
+autoconf/autom4te.cache/output.0:    $as_echo "$0: Please tell bug-autoconf@gnu.org and bugs@yourdomain
+autoconf/autom4te.cache/output.0:PACKAGE_BUGREPORT='bugs@yourdomain'
+autoconf/autom4te.cache/output.0:Report bugs to <bugs@yourdomain>.
+autoconf/autom4te.cache/output.0:## Report this to bugs@yourdomain ##
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:  echo 'int main () { return 0; }' > conftest.$ac_ext
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:  echo "  global: main;" >> "$tmp/export.map"
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:int main(){nm_test_var='a';nm_test_func();return(0);}
+autoconf/autom4te.cache/output.0:	  eval "$lt_cv_sys_global_symbol_to_cdecl"' < "$nlist" | grep -v main >> conftest.$ac_ext'
+autoconf/autom4te.cache/output.0:	  $SED "s/^$symcode$symcode* \(.*\) \(.*\)$/  {\"\2\", (lt_ptr_t) \&\2},/" < "$nlist" | grep -v main >> conftest.$ac_ext
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:int main(){nm_test_func;return 0;}
+autoconf/autom4te.cache/output.0:int main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -limagehlp" >&5
+autoconf/autom4te.cache/output.0:$as_echo_n "checking for main in -limagehlp... " >&6; }
+autoconf/autom4te.cache/output.0:if ${ac_cv_lib_imagehlp_main+:} false; then :
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:return main ();
+autoconf/autom4te.cache/output.0:  ac_cv_lib_imagehlp_main=yes
+autoconf/autom4te.cache/output.0:  ac_cv_lib_imagehlp_main=no
+autoconf/autom4te.cache/output.0:{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_imagehlp_main" >&5
+autoconf/autom4te.cache/output.0:$as_echo "$ac_cv_lib_imagehlp_main" >&6; }
+autoconf/autom4te.cache/output.0:if test "x$ac_cv_lib_imagehlp_main" = xyes; then :
+autoconf/autom4te.cache/output.0:  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lpsapi" >&5
+autoconf/autom4te.cache/output.0:$as_echo_n "checking for main in -lpsapi... " >&6; }
+autoconf/autom4te.cache/output.0:if ${ac_cv_lib_psapi_main+:} false; then :
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:return main ();
+autoconf/autom4te.cache/output.0:  ac_cv_lib_psapi_main=yes
+autoconf/autom4te.cache/output.0:  ac_cv_lib_psapi_main=no
+autoconf/autom4te.cache/output.0:{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_psapi_main" >&5
+autoconf/autom4te.cache/output.0:$as_echo "$ac_cv_lib_psapi_main" >&6; }
+autoconf/autom4te.cache/output.0:if test "x$ac_cv_lib_psapi_main" = xyes; then :
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:      int main() {
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __main in -lgcc" >&5
+autoconf/autom4te.cache/output.0:$as_echo_n "checking for __main in -lgcc... " >&6; }
+autoconf/autom4te.cache/output.0:if ${ac_cv_lib_gcc___main+:} false; then :
+autoconf/autom4te.cache/output.0:char __main ();
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:return __main ();
+autoconf/autom4te.cache/output.0:  ac_cv_lib_gcc___main=yes
+autoconf/autom4te.cache/output.0:  ac_cv_lib_gcc___main=no
+autoconf/autom4te.cache/output.0:{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_gcc___main" >&5
+autoconf/autom4te.cache/output.0:$as_echo "$ac_cv_lib_gcc___main" >&6; }
+autoconf/autom4te.cache/output.0:if test "x$ac_cv_lib_gcc___main" = xyes; then :
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:   The main things grep needs to know about mmap are:
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:int main() {
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:main ()
+autoconf/autom4te.cache/output.0:Report bugs to <bugs@yourdomain>."
+autoconf/autom4te.cache/output.0:# FIXME: do we really want to maintain this feature?
+autoconf/autom4te.cache/traces.1:m4trace:configure.ac:4: -1- AC_INIT([[[hw1pass]]], [[[1.00]]], [bugs@yourdomain])
+autoconf/autom4te.cache/traces.1:m4trace:configure.ac:1261: -2- AH_OUTPUT([HAVE___MAIN], [/* Have host\'s __main */
+autoconf/configure.ac~:AC_INIT([[[hw1pass]]],[[[1.00]]],[bugs@yourdomain])
+autoconf/configure.ac~:  AC_CHECK_LIB(imagehlp, main)
+autoconf/configure.ac~:  AC_CHECK_LIB(psapi, main)
+autoconf/configure.ac~:      int main() {
+autoconf/configure.ac~:  AC_CHECK_LIB(gcc,__main,AC_DEFINE([HAVE___MAIN],[1],[Have host's __main]))
+autoconf/configure.ac~:    [[int main() {
+autoconf/aclocal.m4:  echo 'int main () { return 0; }' > conftest.$ac_ext
+autoconf/aclocal.m4:LIBTOOL_DEPS="$ac_aux_dir/ltmain.sh"
+autoconf/aclocal.m4:ltmain="$ac_aux_dir/ltmain.sh"
+autoconf/aclocal.m4:int main ()
+autoconf/aclocal.m4:if test -f "$ltmain" && test -n "$tagnames"; then
+autoconf/aclocal.m4:  # func_win32_libid is a shell function defined in ltmain.sh
+autoconf/aclocal.m4:lt_simple_link_test_code='int main(){return(0);}\n'
+autoconf/aclocal.m4:lt_simple_link_test_code='int main(int, char *[[]]) { return(0); }\n'
+autoconf/aclocal.m4:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/aclocal.m4:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/aclocal.m4:lt_simple_link_test_code='public class conftest { public static void main(String[[]] argv) {}; }\n'
+autoconf/aclocal.m4:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/aclocal.m4:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/aclocal.m4:# libtool distribution, otherwise you forgot to ship ltmain.sh
+autoconf/aclocal.m4:# no rules to generate ltmain.sh.
+autoconf/aclocal.m4:if test -f "$ltmain"; then
+autoconf/aclocal.m4:# NOTE: Changes made to this file will be lost: look at ltmain.sh.
+autoconf/aclocal.m4:  sed '$q' "$ltmain" >> "$cfgfile" || (rm -f "$cfgfile"; exit 1)
+autoconf/aclocal.m4:  ltmain_in=`echo $ltmain | sed -e 's/\.sh$/.in/'`
+autoconf/aclocal.m4:  if test -f "$ltmain_in"; then
+autoconf/aclocal.m4:    test -f Makefile && make "$ltmain"
+autoconf/aclocal.m4:int main(){nm_test_var='a';nm_test_func();return(0);}
+autoconf/aclocal.m4:	  eval "$lt_cv_sys_global_symbol_to_cdecl"' < "$nlist" | grep -v main >> conftest.$ac_ext'
+autoconf/aclocal.m4:	  $SED "s/^$symcode$symcode* \(.*\) \(.*\)$/  {\"\2\", (lt_ptr_t) \&\2},/" < "$nlist" | grep -v main >> conftest.$ac_ext
+autoconf/aclocal.m4:	  # _LT_AC_TAGVAR(lt_prog_compiler_static, $1)="--no_auto_instantiation -u __main -u __premain -u _abort -r $COOL_DIR/lib/libOrb.a $MVME_DIR/lib/CC/libC.a $MVME_DIR/lib/classix/libcx.s.a"
+autoconf/aclocal.m4:	  tmp_addflag=' $pic_flag -Mnomain' ;;
+autoconf/aclocal.m4:	  tmp_addflag=' -i_dynamic -nofor_main' ;;
+autoconf/aclocal.m4:	  tmp_addflag=' -nofor_main' ;;
+autoconf/aclocal.m4:      # Tell ltmain to make .lib files, not .a files.
+autoconf/aclocal.m4:      # Tell ltmain to make .dll files, not .so files.
+autoconf/aclocal.m4:  echo "  global: main;" >> "$tmp/export.map"
+autoconf/aclocal.m4:int main(){nm_test_func;return 0;}
+autoconf/configure.ac:AC_INIT([[[hw1pass]]],[[[1.00]]],[bugs@yourdomain])
+autoconf/configure.ac:  AC_CHECK_LIB(imagehlp, main)
+autoconf/configure.ac:  AC_CHECK_LIB(psapi, main)
+autoconf/configure.ac:      int main() {
+autoconf/configure.ac:  AC_CHECK_LIB(gcc,__main,AC_DEFINE([HAVE___MAIN],[1],[Have host's __main]))
+autoconf/configure.ac:    [[int main() {
+autoconf/config.sub:	      | -ptx* | -coff* | -ecoff* | -winnt* | -domain* | -vsta* \
+autoconf/config.sub:		os=-domain
+autoconf/ExportMap.map:	global: main;
+autoconf/install-sh:# FSF changes to this file are in the public domain.
+autoconf/install-sh:    *)  # When -d is used, all remaining arguments are directories to create.
+autoconf/mkinstalldirs:# Public domain.
+autoconf/mkinstalldirs:# This file is maintained in Automake, please report
+autoconf/m4/ltdl.m4:int main(){nm_test_func;return 0;}
+autoconf/m4/link_options.m4:  echo "  global: main;" >> "$tmp/export.map"
+autoconf/m4/libtool.m4:LIBTOOL_DEPS="$ac_aux_dir/ltmain.sh"
+autoconf/m4/libtool.m4:ltmain="$ac_aux_dir/ltmain.sh"
+autoconf/m4/libtool.m4:int main ()
+autoconf/m4/libtool.m4:if test -f "$ltmain" && test -n "$tagnames"; then
+autoconf/m4/libtool.m4:  # func_win32_libid is a shell function defined in ltmain.sh
+autoconf/m4/libtool.m4:lt_simple_link_test_code='int main(){return(0);}\n'
+autoconf/m4/libtool.m4:lt_simple_link_test_code='int main(int, char *[[]]) { return(0); }\n'
+autoconf/m4/libtool.m4:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/m4/libtool.m4:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/m4/libtool.m4:lt_simple_link_test_code='public class conftest { public static void main(String[[]] argv) {}; }\n'
+autoconf/m4/libtool.m4:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/m4/libtool.m4:# ltmain only uses $CC for tagged configurations so make sure $CC is set.
+autoconf/m4/libtool.m4:# libtool distribution, otherwise you forgot to ship ltmain.sh
+autoconf/m4/libtool.m4:# no rules to generate ltmain.sh.
+autoconf/m4/libtool.m4:if test -f "$ltmain"; then
+autoconf/m4/libtool.m4:# NOTE: Changes made to this file will be lost: look at ltmain.sh.
+autoconf/m4/libtool.m4:  sed '$q' "$ltmain" >> "$cfgfile" || (rm -f "$cfgfile"; exit 1)
+autoconf/m4/libtool.m4:  ltmain_in=`echo $ltmain | sed -e 's/\.sh$/.in/'`
+autoconf/m4/libtool.m4:  if test -f "$ltmain_in"; then
+autoconf/m4/libtool.m4:    test -f Makefile && make "$ltmain"
+autoconf/m4/libtool.m4:int main(){nm_test_var='a';nm_test_func();return(0);}
+autoconf/m4/libtool.m4:	  eval "$lt_cv_sys_global_symbol_to_cdecl"' < "$nlist" | grep -v main >> conftest.$ac_ext'
+autoconf/m4/libtool.m4:	  $SED "s/^$symcode$symcode* \(.*\) \(.*\)$/  {\"\2\", (lt_ptr_t) \&\2},/" < "$nlist" | grep -v main >> conftest.$ac_ext
+autoconf/m4/libtool.m4:	  # _LT_AC_TAGVAR(lt_prog_compiler_static, $1)="--no_auto_instantiation -u __main -u __premain -u _abort -r $COOL_DIR/lib/libOrb.a $MVME_DIR/lib/CC/libC.a $MVME_DIR/lib/classix/libcx.s.a"
+autoconf/m4/libtool.m4:	  tmp_addflag=' $pic_flag -Mnomain' ;;
+autoconf/m4/libtool.m4:	  tmp_addflag=' -i_dynamic -nofor_main' ;;
+autoconf/m4/libtool.m4:	  tmp_addflag=' -nofor_main' ;;
+autoconf/m4/libtool.m4:      # Tell ltmain to make .lib files, not .a files.
+autoconf/m4/libtool.m4:      # Tell ltmain to make .dll files, not .so files.
+autoconf/m4/build_exeext.m4:  echo 'int main () { return 0; }' > conftest.$ac_ext
+autoconf/ltmain.sh:# ltmain.sh - Provide generalized library-building support services.
+autoconf/ltmain.sh:PROGRAM=ltmain.sh
+autoconf/ltmain.sh:      # we shouldn't force the makefile maintainer to figure out
+autoconf/ltmain.sh:	  int main() { return 0; }
+autoconf/ltmain.sh:	  # Handle the remaining objects by creating one last
+autoconf/ltmain.sh:main (int argc, char *argv[])
+autoconf/ltmain.sh:  DEBUG("(main) argv[0]      : %s\n",argv[0]);
+autoconf/ltmain.sh:  DEBUG("(main) program_name : %s\n",program_name);
+autoconf/ltmain.sh:  DEBUG("(main) found exe at : %s\n",newargz[1]);
+autoconf/ltmain.sh:    DEBUG("(main) newargz[%d]   : %s\n",i,newargz[i]);
+autoconf/ltmain.sh:	    # FIXME: should reinstall the best remaining shared library.
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:/tmp/conftest-x9aciF.o: In function `main':
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:int main(){nm_test_func;return 0;}
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:/tmp/conftest-VQGi6i.o: In function `main':
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:/tmp/conftest-DzXehe.o: In function `main':
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:|       int main() {
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:/tmp/conftest-VkTk3E.o: In function `main':
+config.log:/tmp/conftest-3XcKPD.o: In function `main':
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:/tmp/conftest-5apKaX.o: In function `main':
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:| #define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.log:| main ()
+config.log:DEFS='-DPACKAGE_NAME=\"\[hw1pass\]\" -DPACKAGE_TARNAME=\"--hw1pass--\" -DPACKAGE_VERSION=\"\[1.00\]\" -DPACKAGE_STRING=\"\[hw1pass\]\ \[1.00\]\" -DPACKAGE_BUGREPORT=\"bugs@yourdomain\" -DPACKAGE_URL=\"\" -DLLVM_ON_UNIX=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DENABLE_THREADS=1 -DENABLE_PIC=1 -DENABLE_TIMESTAMPS=1 -DLLVM_NATIVE_ARCH=X86 -DLLVM_NATIVE_TARGET=LLVMInitializeX86Target -DLLVM_NATIVE_TARGETINFO=LLVMInitializeX86TargetInfo -DLLVM_NATIVE_TARGETMC=LLVMInitializeX86TargetMC -DLLVM_NATIVE_ASMPRINTER=LLVMInitializeX86AsmPrinter -DCLANG_RESOURCE_DIR=\"\" -DC_INCLUDE_DIRS=\"\" -DGCC_INSTALL_PREFIX=\"\" -DBUG_REPORT_URL=\"http://llvm.org/bugs/\" -DHAVE_DOT=1 -DLLVM_PATH_DOT=\"/usr/bin/dot\" -DHAVE_FDP=1 -DLLVM_PATH_FDP=\"/usr/bin/fdp\" -DHAVE_NEATO=1 -DLLVM_PATH_NEATO=\"/usr/bin/neato\" -DHAVE_TWOPI=1 -DLLVM_PATH_TWOPI=\"/usr/bin/twopi\" -DHAVE_CIRCO=1 -DLLVM_PATH_CIRCO=\"/usr/bin/circo\" -DHAVE_DOTTY=1 -DLLVM_PATH_DOTTY=\"/usr/bin/dotty\" -DHOST_LINK_VERSION=\"2.24\" -DHAVE_LINK_R=1 -DHAVE_LINK_EXPORT_DYNAMIC=1 -DHAVE_DIRENT_H=1 -DHAVE_DLFCN_H=1 -DLTDL_SHLIB_EXT=\".so\" -DLTDL_SHLIBPATH_VAR=\"LD_LIBRARY_PATH\" -DLTDL_SYSSEARCHPATH=\"/lib:/usr/lib:/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu/mesa-egl:/usr/lib/x86_64-linux-gnu/mesa\" -DLTDL_OBJDIR=\".libs/\" -DHAVE_PRELOADED_SYMBOLS=1 -DHAVE_LIBDL=1 -DHAVE_DLERROR=1 -DHAVE_ARGZ_H=1 -DHAVE_ERROR_T=1 -DHAVE_ARGZ_APPEND=1 -DHAVE_ARGZ_CREATE_SEP=1 -DHAVE_ARGZ_INSERT=1 -DHAVE_ARGZ_NEXT=1 -DHAVE_ARGZ_STRINGIFY=1 -DHAVE_ASSERT_H=1 -DHAVE_CTYPE_H=1 -DHAVE_ERRNO_H=1 -DHAVE_MALLOC_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STDIO_H=1 -DHAVE_UNISTD_H=1 -DHAVE_STRING_H=1 -DHAVE_STRCHR=1 -DHAVE_STRRCHR=1 -DHAVE_MEMCPY=1 -DHAVE_MEMMOVE=1 -DHAVE_STRCMP=1 -DHAVE_CLOSEDIR=1 -DHAVE_OPENDIR=1 -DHAVE_READDIR=1 -DHAVE_LIBM=1 -DHAVE_DLOPEN=1 -DHAVE_MALLINFO=1 -DHAVE_LIBPTHREAD=1 -DHAVE_PTHREAD_MUTEX_LOCK=1 -DHAVE_PTHREAD_RWLOCK_INIT=1 -DHAVE_PTHREAD_GETSPECIFIC=1 -DUSE_UDIS86=0 -DUSE_OPROFILE=0 -DHAVE_DIRENT_H=1 -DHAVE_MMAP_ANONYMOUS=1 -DHAVE_SYS_WAIT_H=1 -DTIME_WITH_SYS_TIME=1 -DHAVE_DLFCN_H=1 -DHAVE_EXECINFO_H=1 -DHAVE_FCNTL_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_LIMITS_H=1 -DHAVE_LINK_H=1 -DHAVE_MALLOC_H=1 -DHAVE_SETJMP_H=1 -DHAVE_SIGNAL_H=1 -DHAVE_STDINT_H=1 -DHAVE_TERMIOS_H=1 -DHAVE_UNISTD_H=1 -DHAVE_UTIME_H=1 -DHAVE_SYS_MMAN_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_SYS_RESOURCE_H=1 -DHAVE_SYS_TIME_H=1 -DHAVE_SYS_UIO_H=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_IOCTL_H=1 -DHAVE_FENV_H=1 -DHAVE_PTHREAD_H=1 -DHAVE_CRASHREPORTER_INFO=0 -DRETSIGTYPE=void -DHAVE_INT64_T=1 -DHAVE_UINT64_T=1 -DHAVE_BACKTRACE=1 -DHAVE_CEILF=1 -DHAVE_FLOORF=1 -DHAVE_ROUNDF=1 -DHAVE_RINTF=1 -DHAVE_NEARBYINTF=1 -DHAVE_GETCWD=1 -DHAVE_POWF=1 -DHAVE_FMODF=1 -DHAVE_STRTOF=1 -DHAVE_ROUND=1 -DHAVE_GETPAGESIZE=1 -DHAVE_GETRUSAGE=1 -DHAVE_GETRLIMIT=1 -DHAVE_SETRLIMIT=1 -DHAVE_GETTIMEOFDAY=1 -DHAVE_ISATTY=1 -DHAVE_MKDTEMP=1 -DHAVE_MKSTEMP=1 -DHAVE_MKTEMP=1 -DHAVE_POSIX_SPAWN=1 -DHAVE_REALPATH=1 -DHAVE_SBRK=1 -DHAVE_SETRLIMIT=1 -DHAVE_STRDUP=1 -DHAVE_STRERROR=1 -DHAVE_STRERROR_R=1 -DHAVE_SETENV=1 -DHAVE_STRTOLL=1 -DHAVE_STRTOQ=1 -DHAVE_SYSCONF=1 -DHAVE_SETJMP=1 -DHAVE_LONGJMP=1 -DHAVE_SIGLONGJMP=1 -DHAVE_WRITEV=1 -DHAVE_PRINTF_A=1 -DHAVE_RAND48=1 -DHAVE_DECL_STRERROR_S=0 -DHAVE_ISNAN_IN_MATH_H=1 -DHAVE_ISNAN_IN_CMATH=1 -DHAVE_STD_ISNAN_IN_CMATH=1 -DHAVE_ISINF_IN_MATH_H=1 -DHAVE_ISINF_IN_CMATH=1 -DHAVE_STD_ISINF_IN_CMATH=1 -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MMAP_FILE=/\*\*/ -DLLVM_HAS_ATOMICS=1 -DHAVE___DSO_HANDLE=1 -DLLVM_PREFIX=\"/usr/local\" -DLLVM_BINDIR=\"/usr/local/bin\" -DLLVM_LIBDIR=\"/usr/local/lib\" -DLLVM_DATADIR=\"/usr/local/share/llvm\" -DLLVM_DOCSDIR=\"/usr/local/share/doc/llvm\" -DLLVM_ETCDIR=\"/usr/local/etc/llvm\" -DLLVM_INCLUDEDIR=\"/usr/local/include\" -DLLVM_INFODIR=\"/usr/local/info\" -DLLVM_MANDIR=\"/usr/local/man\" -DLLVM_CONFIGTIME=\"Fri\ Sep\ 19\ 15:16:34\ EDT\ 2014\" -DLLVM_DEFAULT_TARGET_TRIPLE=\"x86_64-unknown-linux-gnu\"'
+config.log:PACKAGE_BUGREPORT='bugs@yourdomain'
+config.log:#define PACKAGE_BUGREPORT "bugs@yourdomain"
+config.status:Report bugs to <bugs@yourdomain>."
+config.status:"_BUGREPORT=\\\"bugs@yourdomain\\\" -DPACKAGE_URL=\\\"\\\" -DLLVM_ON_UNIX=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAV"\
+config.status:S["PACKAGE_BUGREPORT"]="bugs@yourdomain"
+configure:# Report bugs to <bugs@yourdomain>.
+configure:    $as_echo "$0: Please tell bug-autoconf@gnu.org and bugs@yourdomain
+configure:PACKAGE_BUGREPORT='bugs@yourdomain'
+configure:Report bugs to <bugs@yourdomain>.
+configure:## Report this to bugs@yourdomain ##
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:  echo 'int main () { return 0; }' > conftest.$ac_ext
+configure:main ()
+configure:main ()
+configure:  echo "  global: main;" >> "$tmp/export.map"
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:int main(){nm_test_var='a';nm_test_func();return(0);}
+configure:	  eval "$lt_cv_sys_global_symbol_to_cdecl"' < "$nlist" | grep -v main >> conftest.$ac_ext'
+configure:	  $SED "s/^$symcode$symcode* \(.*\) \(.*\)$/  {\"\2\", (lt_ptr_t) \&\2},/" < "$nlist" | grep -v main >> conftest.$ac_ext
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:int main(){nm_test_func;return 0;}
+configure:int main ()
+configure:main ()
+configure:  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -limagehlp" >&5
+configure:$as_echo_n "checking for main in -limagehlp... " >&6; }
+configure:if ${ac_cv_lib_imagehlp_main+:} false; then :
+configure:main ()
+configure:return main ();
+configure:  ac_cv_lib_imagehlp_main=yes
+configure:  ac_cv_lib_imagehlp_main=no
+configure:{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_imagehlp_main" >&5
+configure:$as_echo "$ac_cv_lib_imagehlp_main" >&6; }
+configure:if test "x$ac_cv_lib_imagehlp_main" = xyes; then :
+configure:  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lpsapi" >&5
+configure:$as_echo_n "checking for main in -lpsapi... " >&6; }
+configure:if ${ac_cv_lib_psapi_main+:} false; then :
+configure:main ()
+configure:return main ();
+configure:  ac_cv_lib_psapi_main=yes
+configure:  ac_cv_lib_psapi_main=no
+configure:{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_psapi_main" >&5
+configure:$as_echo "$ac_cv_lib_psapi_main" >&6; }
+configure:if test "x$ac_cv_lib_psapi_main" = xyes; then :
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:      int main() {
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for __main in -lgcc" >&5
+configure:$as_echo_n "checking for __main in -lgcc... " >&6; }
+configure:if ${ac_cv_lib_gcc___main+:} false; then :
+configure:char __main ();
+configure:main ()
+configure:return __main ();
+configure:  ac_cv_lib_gcc___main=yes
+configure:  ac_cv_lib_gcc___main=no
+configure:{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_gcc___main" >&5
+configure:$as_echo "$ac_cv_lib_gcc___main" >&6; }
+configure:if test "x$ac_cv_lib_gcc___main" = xyes; then :
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:main ()
+configure:   The main things grep needs to know about mmap are:
+configure:main ()
+configure:main ()
+configure:int main() {
+configure:main ()
+configure:main ()
+configure:Report bugs to <bugs@yourdomain>."
+configure:# FIXME: do we really want to maintain this feature?
+Makefile.llvm.config:# Executable file extension for build platform (mainly for
+Makefile.llvm.config:# Compilers for the build platflorm (mainly for tablegen
+Makefile.llvm.config.in:# Executable file extension for build platform (mainly for
+Makefile.llvm.config.in:# Compilers for the build platflorm (mainly for tablegen
+Makefile.llvm.rules:# Unfortunately, this list must be maintained if new recursive targets are added
+Makefile.llvm.rules:LD.Flags += -Wl,-exported_symbol,_main

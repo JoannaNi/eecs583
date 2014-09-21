@@ -1,0 +1,32 @@
+digraph "CFG for 'main' function" {
+	label="CFG for 'main' function";
+
+	Node0x20b6ec0 [shape=record,label="{%0:\l  %1 = alloca i32, align 4\l  %in = alloca [1000 x i32], align 16\l  %i = alloca i32, align 4\l  %j = alloca i32, align 4\l  %myfile = alloca %struct._IO_FILE*, align 8\l  store i32 0, i32* %1\l  store i32 0, i32* %i, align 4\l  br label %2\l}"];
+	Node0x20b6ec0 -> Node0x20b6f20;
+	Node0x20b6f20 [shape=record,label="{%2:\l\l  %3 = load i32* %i, align 4\l  %4 = icmp slt i32 %3, 1000\l  br i1 %4, label %5, label %12\l|{<s0>T|<s1>F}}"];
+	Node0x20b6f20:s0 -> Node0x20b6f80;
+	Node0x20b6f20:s1 -> Node0x20b73e0;
+	Node0x20b6f80 [shape=record,label="{%5:\l\l  %6 = load i32* %i, align 4\l  %7 = sext i32 %6 to i64\l  %8 = getelementptr inbounds [1000 x i32]* %in, i32 0, i64 %7\l  store i32 0, i32* %8, align 4\l  br label %9\l}"];
+	Node0x20b6f80 -> Node0x20b7380;
+	Node0x20b7380 [shape=record,label="{%9:\l\l  %10 = load i32* %i, align 4\l  %11 = add nsw i32 %10, 1\l  store i32 %11, i32* %i, align 4\l  br label %2\l}"];
+	Node0x20b7380 -> Node0x20b6f20;
+	Node0x20b73e0 [shape=record,label="{%12:\l\l  store i32 100, i32* %j, align 4\l  br label %13\l}"];
+	Node0x20b73e0 -> Node0x20b7440;
+	Node0x20b7440 [shape=record,label="{%13:\l\l  %14 = load i32* %j, align 4\l  %15 = icmp slt i32 %14, 1000\l  br i1 %15, label %16, label %25\l|{<s0>T|<s1>F}}"];
+	Node0x20b7440:s0 -> Node0x20b74a0;
+	Node0x20b7440:s1 -> Node0x20c4650;
+	Node0x20b74a0 [shape=record,label="{%16:\l\l  %17 = load i32* %j, align 4\l  %18 = sext i32 %17 to i64\l  %19 = getelementptr inbounds [1000 x i32]* %in, i32 0, i64 %18\l  %20 = load i32* %19, align 4\l  %21 = add nsw i32 %20, 10\l  store i32 %21, i32* %19, align 4\l  br label %22\l}"];
+	Node0x20b74a0 -> Node0x20b7500;
+	Node0x20b7500 [shape=record,label="{%22:\l\l  %23 = load i32* %j, align 4\l  %24 = add nsw i32 %23, 1\l  store i32 %24, i32* %j, align 4\l  br label %13\l}"];
+	Node0x20b7500 -> Node0x20b7440;
+	Node0x20c4650 [shape=record,label="{%25:\l\l  store i32 0, i32* %i, align 4\l  br label %26\l}"];
+	Node0x20c4650 -> Node0x20c46b0;
+	Node0x20c46b0 [shape=record,label="{%26:\l\l  %27 = load i32* %i, align 4\l  %28 = icmp slt i32 %27, 1000\l  br i1 %28, label %29, label %39\l|{<s0>T|<s1>F}}"];
+	Node0x20c46b0:s0 -> Node0x20c4710;
+	Node0x20c46b0:s1 -> Node0x20c47d0;
+	Node0x20c4710 [shape=record,label="{%29:\l\l  %30 = load %struct._IO_FILE** @stdout, align 8\l  %31 = load i32* %i, align 4\l  %32 = sext i32 %31 to i64\l  %33 = getelementptr inbounds [1000 x i32]* %in, i32 0, i64 %32\l  %34 = load i32* %33, align 4\l  %35 = call i32 (%struct._IO_FILE*, i8*, ...)* @fprintf(%struct._IO_FILE* %30, i8* getelementptr inbounds ([4 x i8]* @.str, i32 0, i32 0), i32 %34)\l  br label %36\l}"];
+	Node0x20c4710 -> Node0x20c4770;
+	Node0x20c4770 [shape=record,label="{%36:\l\l  %37 = load i32* %i, align 4\l  %38 = add nsw i32 %37, 1\l  store i32 %38, i32* %i, align 4\l  br label %26\l}"];
+	Node0x20c4770 -> Node0x20c46b0;
+	Node0x20c47d0 [shape=record,label="{%39:\l\l  ret i32 1\l}"];
+}
