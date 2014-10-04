@@ -89,7 +89,7 @@ namespace {
   struct SLICM : public LoopPass {
     static char ID; // Pass identification, replacement for typeid
     SLICM() : LoopPass(ID) {
-//      initializeSLICMPass(*PassRegistry::getPassRegistry()); // 583 - commented out
+      //initializeSLICMPass(*PassRegistry::getPassRegistry()); // 583 - commented out
     }
 
     virtual bool runOnLoop(Loop *L, LPPassManager &LPM);
@@ -203,6 +203,7 @@ namespace {
     }
 
     bool canSinkOrHoistInst(Instruction &I);
+    bool canHoistLoad(Instruction &I);
     bool isNotUsedInLoop(Instruction &I);
 
     void PromoteAliasSet(AliasSet &AS,
@@ -311,6 +312,88 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
       PromoteAliasSet(*I, ExitBlocks, InsertPts);
   }
 
+
+  // SLICM code starts here
+  // move out all of the load instructions from the loop
+  // eventually get the dependency mapping used in hw1
+  // first find all the loads we can hoist
+  set <Instruction*> hoistedLoads;
+  for (Loop::block_iterator I = L->block_begin(), E = L->block_end();
+       I != E; ++I) {
+    BasicBlock *BB = *I;
+    if (LI->getLoopFor(BB) == L) {       // Ignore blocks in subloops.
+      for (BasicBlock::iterator i = BB->begin(), ie = BB->end(); i!= ie; ) {
+	Instruction &I = *i++;
+	string opcodeName = string(I.getOpcodeName());
+	//errs() << "Opcode Name: " << opcodeName << '\n';
+
+	if (opcodeName == "load" and canHoistLoad(I)) {
+	  Instruction* instruction = &I;
+	  hoistedLoads.insert(instruction);
+	}
+      }
+    }
+  }
+  set<Instruction*>::iterator sit;
+  for (set<Instruction*>::iterator sit = hoistedLoads.begin(), sie = hoistedLoads.end(); sit != sie; ) {
+    Instruction &I = *(*sit++);
+    string opcodeName = string(I.getOpcodeName());
+    //errs() << "Opcode Name: " << opcodeName << '\n';
+    BasicBlock *BB = I.getParent();
+    if (opcodeName == "load" and canHoistLoad(I)) {
+      // split bb here
+      BasicBlock* restBlock = SplitBlock(BB, &I, this);
+      // redoBlock should point to restBlock
+      BasicBlock* redoBlock = SplitEdge(BB, restBlock, this);
+      // delete terminator of BB
+      Instruction *oldTerminator = BB->getTerminator();
+      // allocate a flag
+      Function *parentFunction = Preheader->getParent();
+      Function::iterator fit = parentFunction->getEntryBlock();
+      BasicBlock* Entry = (BasicBlock*) fit;
+      AllocaInst *flag = new AllocaInst(Type::getInt1Ty(Entry->getContext()), "flag", Entry->getTerminator());
+      StoreInst *ST = new StoreInst(ConstantInt::getFalse(Entry->getContext()), flag, Entry->getTerminator());
+      // add branch to end of first bb,
+      // this puts the loadinst at the back of the bb
+      LoadInst *LD = new LoadInst(flag, "loadflag", oldTerminator);
+      // load the flag into flag, and branch depending on value of flag
+      // if flag is true, which means alias occurs, should branch to fixup block
+      BranchInst::Create(redoBlock, restBlock, LD, oldTerminator);
+      oldTerminator->eraseFromParent();
+      hoist(I);
+    }
+  } 
+
+  
+  //now that loads have been hoisted out, check if anything else has become invariant just by running another pass?
+  //should modify hoistregion to maybe return set of hoisted instructions
+  // set<Instruction*> secondHoistedInstructions = SecondHoistRegion(DT->getNode(L->getHeader()));
+  set<Instruction*>::iterator it;  
+  map<Instruction*, BasicBlock*>::iterator mit;
+  // fix up blocks should go where instructions were replaced from
+  /*
+  // print hoisted loads
+  for (mit = hoistedLoads.begin();  mit != hoistedLoads.end(); ++mit) {
+    errs() << "Hoisted load: " << *(mit->first) << '\n';
+  }
+  */
+  // print instructions that were hoisted because of hoisted loads
+  /*
+  for (it = secondHoistedInstructions.begin();  it != secondHoistedInstructions.end(); ++it) {
+    errs() << "Hoisted instruction: " << **it << '\n';
+  }
+  */
+  /*
+  for (mit = hoistedLoads.begin();  mit != hoistedLoads.end(); ++mit) {
+    // make fixup block for each instruction corresponding to all the
+    // instructions in LoadDependentHoistedInstructions which depend on that load
+    // insert fixup block at correct location, which should be branched to if alias occurs
+  }
+  */
+  // when iterating through code to insert fixups, make sure not to skip inner loops
+  // end mark stuff
+
+
   // Clear out loops state information for the next iteration
   CurLoop = 0;
   Preheader = 0;
@@ -321,31 +404,6 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
     LoopToAliasSetMap[L] = CurAST;
   else
     delete CurAST;
-  // SLICM code starts here
-  // move out all of the load instructions from the loop
-  // eventually get the dependency mapping used in hw1
-  set <Instruction*> hoistedLoads;
-  for (Loop::block_iterator I = L->block_begin(), E = L->block_end();
-       I != E; ++I) {
-    BasicBlock *BB = *I;
-    if (LI->getLoopFor(BB) == L) {       // Ignore blocks in subloops.
-      for (BasicBlock::iterator i = BB->begin(), ie = BB->end(); i!= ie; i++) {
-	Instruction* instruction = (Instruction*) i;
-	string opcodeName = string(instruction->getOpcodeName());
-	if (opcodeName == "load") {
-	  // if it's a load instruction, move it out
-	  hoist(*instruction);
-	  hoistedLoads.insert(instruction);
-	}
-      }
-    }
-  }
-  //now that loads have been hoisted out, check if anything else has become invariant just by running another pass?
-  //should modify hoistregion to maybe return set of hoisted instructions
-  
-  HoistRegion(DT->getNode(L->getHeader()));
-
-  // fix up blocks should go where instructions were replaced from
   return Changed;
 }
 
@@ -505,7 +563,8 @@ bool SLICM::canSinkOrHoistInst(Instruction &I) {
       Size = AA->getTypeStoreSize(LI->getType());
     return !pointerInvalidatedByLoop(LI->getOperand(0), Size,
                                      LI->getMetadata(LLVMContext::MD_tbaa));
-  } else if (CallInst *CI = dyn_cast<CallInst>(&I)) {
+  } 
+  else if (CallInst *CI = dyn_cast<CallInst>(&I)) {
     // Don't sink or hoist dbg info; it's legal, but not useful.
     if (isa<DbgInfoIntrinsic>(I))
       return false;
@@ -545,6 +604,31 @@ bool SLICM::canSinkOrHoistInst(Instruction &I) {
 
   return isSafeToExecuteUnconditionally(I);
 }
+
+
+bool SLICM::canHoistLoad(Instruction &I) {
+  // Loads have extra constraints we have to verify before we can hoist them.
+  if (LoadInst *LI = dyn_cast<LoadInst>(&I)) {
+    if (!LI->isUnordered())
+      return false;        // Don't hoist volatile/atomic loads!
+
+    // Loads from constant memory are always safe to move, even if they end up
+    // in the same alias set as something that ends up being modified.
+    if (AA->pointsToConstantMemory(LI->getOperand(0)))
+      return true;
+    if (LI->getMetadata("invariant.load"))
+      return true;
+
+    if (CurLoop->hasLoopInvariantOperands(&I) && isSafeToExecuteUnconditionally(I)) {
+      return true;
+    }
+    return false;
+  } 
+  
+  return isSafeToExecuteUnconditionally(I);
+}
+
+
 
 /// isNotUsedInLoop - Return true if the only users of this instruction are
 /// outside of the loop.  If this is true, we can sink the instruction to the
