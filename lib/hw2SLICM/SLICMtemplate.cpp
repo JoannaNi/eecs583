@@ -353,6 +353,11 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
   // split basic block of each hoistable load, create redo block and rest block for each
   // create a flag for each load, hoist load. 
   // create map of loads to redoBB's and associated flag
+
+  Function *parentFunction = Preheader->getParent();
+  Function::iterator fit = parentFunction->getEntryBlock();
+  BasicBlock* Entry = (BasicBlock*) fit;
+
   set<Instruction*>::iterator sit;
   for (set<Instruction*>::iterator sit = hoistedLoads.begin(), sie = hoistedLoads.end(); sit != sie; ) {
     Instruction &I = *(*sit++);
@@ -368,9 +373,6 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
 
 
       // allocate a flag
-      Function *parentFunction = Preheader->getParent();
-      Function::iterator fit = parentFunction->getEntryBlock();
-      BasicBlock* Entry = (BasicBlock*) fit;
       AllocaInst *flag = new AllocaInst(Type::getInt1Ty(Entry->getContext()), "flag", Entry->getTerminator());
       StoreInst *ST = new StoreInst(ConstantInt::getFalse(Entry->getContext()), flag, Entry->getTerminator());
       // add branch to end of first bb,
@@ -405,16 +407,15 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
   for (mit = loadToRedoBlockMap.begin(); mit != loadToRedoBlockMap.end(); ++ mit) {
     LoadInst *load = (LoadInst*) mit->first;
     // each time we load, store value to an allocated stack variable.  then any users of that load should read from stack variable instead
-    AllocaInst * stackVar = new AllocaInst(load->getType());
-    stackVar->insertAfter(load);
+    AllocaInst * stackVar = new AllocaInst(load->getType(), "", Entry->begin());
     StoreInst * storeStack = new StoreInst(load, stackVar);
-    storeStack->insertAfter(stackVar);
+    storeStack->insertAfter(load);
     loadToStackVar.insert(pair<LoadInst*, AllocaInst*>(load, stackVar));
     
     for (Instruction::use_iterator u = load->use_begin(); u != load->use_end(); u++) {
       // modify each of its uses
       User* userInst = (User*)*u;
-      // userInst->replaceUsesOfWith(load, loadToStackVar[load]);
+      //userInst->replaceUsesOfWith(load, loadToStackVar[load]);
     }
   }
 
@@ -433,13 +434,34 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
     // first insert copy of load into redo block
     LoadInst* copyLoad = (LoadInst*)load->clone();
     copyLoad->insertBefore(redoBlock->getTerminator());
-    // for each user of the load, check if its in the set of hoisted instructions
+    // make set of instructions which depend on load, even indirect dependencies
+    set<Instruction*> dependentInstructions;
     for (Instruction::use_iterator u = load->use_begin(); u != load->use_end(); u++) {
-      Instruction* hoistedInst = (Instruction*)*u;
-      //TODO: whether or not the user instruction is hoisted, we need to update it to use SSA/mem2reg
-      if (secondHoistedInstructions.find(hoistedInst) != secondHoistedInstructions.end()) {
+      // first insert all the directly dependent instructions
+      Instruction* directUser = (Instruction*)*u;
+      dependentInstructions.insert(directUser);
+    }
+    // for each instruction which depends on the load, check for instructions which depend on it which were also hoisted
+    // and add them to the set if they were.  Then copy instruction and put it into redo block
+    while (!dependentInstructions.empty()) {
+      set<Instruction*>::iterator sit = dependentInstructions.begin();
+      Instruction* inst = *sit;
+      dependentInstructions.erase(sit);
+      // check if any of the users of inst were also hoisted, in which case they are a n+1 level dependency
+      // and should be inserted into dependent instructions also
+      // TODO: somehow have to preserve the order that these instructions are inserted
+      for (Instruction::use_iterator u = inst->use_begin(); u != inst->use_end(); u++) {
+	if (secondHoistedInstructions.find((Instruction*)*u) != secondHoistedInstructions.end()) {
+	  dependentInstructions.insert((Instruction*)*u);
+	}
+      }
+      // TODO: update inst to use correct version of load
+      
+      
+
+      if (secondHoistedInstructions.find(inst) != secondHoistedInstructions.end()) {
 	// if it is, push copy of the user instruction into redo block
-	Instruction* copyInst = hoistedInst->clone();
+	Instruction* copyInst = inst->clone();
 	copyInst->insertBefore(redoBlock->getTerminator());
 	errs() << "copying dependent instruction to redo block: " << *copyInst << '\n';
       }
@@ -456,7 +478,7 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
   // for each load it matches, set appropriate flag to true
 
 
-  // when iterating through code to insert fixups, make sure not to skip inner loops
+  // TODO: when iterating through code to insert fixups, make sure not to skip inner loops
   // end mark stuff
 
 
