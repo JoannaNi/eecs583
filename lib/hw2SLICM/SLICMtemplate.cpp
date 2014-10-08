@@ -401,8 +401,10 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
   }
 
   
-  // to handle ssa form, need to modify each load before we copy it so that it loads from stack variable instead of memory address
-  // also each user of load should also user the new stack variable
+  // to handle ssa form, each load needs to be modified as follows:  An allocainst needs to be added to the first block of the function, 
+  // allocating a stack variable corresponding to the load.  then after the load, we add a store which stores the loaded value into the 
+  // allocated stack variable.  now every consumer of the load should also use that stack variable instead of the original loaded register
+  // we do this by loading the stack variable into a temporary register, and replacing uses of the load instruction with the temporary register instead
   map<LoadInst*, AllocaInst*> loadToStackVar; //maps load to its corresponding stack variable
   for (mit = loadToRedoBlockMap.begin(); mit != loadToRedoBlockMap.end(); ++ mit) {
     LoadInst *load = (LoadInst*) mit->first;
@@ -415,25 +417,29 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
     for (Instruction::use_iterator u = load->use_begin(); u != load->use_end(); u++) {
       // modify each of its uses
       User* userInst = (User*)*u;
-      //userInst->replaceUsesOfWith(load, loadToStackVar[load]);
+      LoadInst *tempReg = new LoadInst(loadToStackVar[load], "tempregister", (Instruction*) userInst);
+      userInst->replaceUsesOfWith(load, tempReg);
     }
   }
 
   // TODO: don't forget, for each hoisted instruction also want to make sure ssa redone in both redo block and in top block
-
-
-
   // populate the redo blocks by iterating through each hoisted load, finding all of its uses, and checking whether they were hoisted
   // after all the loads were hoisted (meaning they need to be redone if the load was actually aliased)
-  // TODO: don't forget when calculating the redo block, need to check iteratively to find second level dependencies and further
+
+  // have to fix up SSA form here too.  So in addition to cloning each load, need to modify it such that each cloned load also stores to corresponding stack variable
+
   for (mit = loadToRedoBlockMap.begin();  mit != loadToRedoBlockMap.end(); ++mit) {
     // for each hoisted load, check its use list
-    Instruction *load = mit->first;
+    LoadInst *load = (LoadInst*) mit->first;
     BasicBlock *redoBlock = mit->second.first;
     AllocaInst *flag = mit->second.second;
     // first insert copy of load into redo block
-    LoadInst* copyLoad = (LoadInst*)load->clone();
+    
+    LoadInst* copyLoad = (LoadInst*) load->clone();
     copyLoad->insertBefore(redoBlock->getTerminator());
+    // SSA form
+    StoreInst* storeStack = new StoreInst(copyLoad, loadToStackVar[load]);
+    storeStack->insertAfter(copyLoad);
     // make set of instructions which depend on load, even indirect dependencies
     set<Instruction*> dependentInstructions;
     for (Instruction::use_iterator u = load->use_begin(); u != load->use_end(); u++) {
