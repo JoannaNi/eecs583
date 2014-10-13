@@ -162,8 +162,16 @@ namespace {
     ///
     void HoistRegion(DomTreeNode *N);
     
-    ///  Function to call after loads are hoisted during speculative part
+    /// SLICM function declarations
+    /// Function to call after loads are hoisted during speculative part
     set<Instruction*> SecondHoistRegion(DomTreeNode *N);
+
+    /// find all hoistable loads
+    set<Instruction*> findAllHoistableLoads(Loop *L, LoopInfo *LI);
+    /// find all stores
+    set<Instruction*> findAllStores(Loop *L);
+    /// create map from each load to corresponding redo block, and hoist out the loads
+    map <Instruction*, pair<BasicBlock*,AllocaInst*> > createLoadToRedoBBMap(set<Instruction*> hoistableLoads, BasicBlock *Entry);
 
     /// inSubLoop - Little predicate that returns true if the specified basic
     /// block is in a subloop of the current one, not the current one itself.
@@ -233,6 +241,78 @@ static RegisterPass<SLICM> X("slicm", "Speculative Loop Invariant Code Motion");
 /// loop is not preserved so it is not a good idea to run SLICM multiple
 /// times on one loop.
 ///
+
+set<Instruction*> SLICM::findAllHoistableLoads(Loop* L, LoopInfo *LI){
+  set<Instruction*> hoistableLoads;
+  for (Loop::block_iterator I = L->block_begin(), E = L->block_end();
+       I != E; ++I) {
+    BasicBlock *BB = *I;
+    if (LI->getLoopFor(BB) == L) {       // Ignore blocks in subloops.
+      for (BasicBlock::iterator i = BB->begin(), ie = BB->end(); i!= ie; ) {
+	Instruction &I = *i++;
+	string opcodeName = string(I.getOpcodeName());
+	//errs() << "Opcode Name: " << opcodeName << '\n';
+
+	if (opcodeName == "load" and canHoistLoad(I)) {
+	  hoistableLoads.insert(&I);
+	}
+      }
+    }
+  }
+  return hoistableLoads;
+}
+
+set<Instruction*> SLICM::findAllStores(Loop *L) {
+  set<Instruction*> allStores;
+  for (Loop::block_iterator I = L->block_begin(), E = L->block_end(); I != E; ++I) {
+    BasicBlock *BB = *I;
+    for (BasicBlock::iterator i = BB->begin(), ie = BB->end(); i!= ie; ) {
+      Instruction &I = *i++;
+      string opcodeName = string(I.getOpcodeName());
+      if (opcodeName == "store") {
+	allStores.insert(&I);
+      }
+    }
+  }
+  return allStores;
+}
+
+map <Instruction*, pair<BasicBlock*,AllocaInst*> > SLICM::createLoadToRedoBBMap(set<Instruction*> hoistableLoads, BasicBlock *Entry) {
+  // split basic block of each hoistable load, create redo block and rest block for each
+  // create a flag for each load, hoist load. 
+  // create map of loads to redoBB's and associated flag
+  map <Instruction*, pair<BasicBlock*,AllocaInst*> > loadToRedoBlockMap;
+  set<Instruction*>::iterator sit;
+  for (set<Instruction*>::iterator sit = hoistableLoads.begin(), sie = hoistableLoads.end(); sit != sie; ) {
+    Instruction &I = *(*sit++);
+    string opcodeName = string(I.getOpcodeName());
+    //errs() << "Opcode Name: " << opcodeName << '\n';
+    BasicBlock *BB = I.getParent();
+    if (opcodeName == "load" and canHoistLoad(I)) {
+      // split bb here
+      BasicBlock* redoBlock = SplitBlock(BB, &I, this);
+      // redoBlock should point to restBlock
+      BasicBlock* restBlock = SplitEdge(BB, redoBlock, this);
+      Instruction *oldTerminator = BB->getTerminator();
+
+      // allocate a flag
+      AllocaInst *flag = new AllocaInst(Type::getInt1Ty(Entry->getContext()), "flag", Entry->getTerminator());
+      StoreInst *ST = new StoreInst(ConstantInt::getFalse(Entry->getContext()), flag, Entry->getTerminator());
+      // add branch to end of first bb,
+      //// this puts the loadinst at the back of the bb
+      LoadInst *LD = new LoadInst(flag, "loadflag", oldTerminator);
+      // load the flag into flag, and branch depending on value of flag
+      // if flag is true, which means alias occurs, should branch to fixup block
+      BranchInst::Create(redoBlock, restBlock, LD, oldTerminator);
+      // insert pair of load instruction, redo block to map
+      loadToRedoBlockMap.insert(pair<Instruction*, pair<BasicBlock*, AllocaInst*> >(&I, pair<BasicBlock*, AllocaInst*> (redoBlock, flag)));
+      oldTerminator->eraseFromParent();
+      hoist(I);
+    }
+  } 
+  return loadToRedoBlockMap;
+}
+
 bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
   Changed = false;
 
@@ -318,79 +398,18 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
   // SLICM code starts here
   // move out all of the load instructions from the loop
   // eventually get the dependency mapping used in hw1
-  // first find all the loads we can hoist
-  set <Instruction*> hoistedLoads;
-  set <Instruction*> allStores;
-  map <Instruction*, pair<BasicBlock*,AllocaInst*> > loadToRedoBlockMap;
-  for (Loop::block_iterator I = L->block_begin(), E = L->block_end();
-       I != E; ++I) {
-    BasicBlock *BB = *I;
-    if (LI->getLoopFor(BB) == L) {       // Ignore blocks in subloops.
-      for (BasicBlock::iterator i = BB->begin(), ie = BB->end(); i!= ie; ) {
-	Instruction &I = *i++;
-	string opcodeName = string(I.getOpcodeName());
-	//errs() << "Opcode Name: " << opcodeName << '\n';
-
-	if (opcodeName == "load" and canHoistLoad(I)) {
-	  hoistedLoads.insert(&I);
-	}
-      }
-    }
-  }
-
-  // get all the stores, so that we can check for aliasing later
-  for (Loop::block_iterator I = L->block_begin(), E = L->block_end(); I != E; ++I) {
-    BasicBlock *BB = *I;
-    for (BasicBlock::iterator i = BB->begin(), ie = BB->end(); i!= ie; ) {
-      Instruction &I = *i++;
-      string opcodeName = string(I.getOpcodeName());
-      if (opcodeName == "store") {
-	allStores.insert(&I);
-      }
-    }
-  }
-  
-  // split basic block of each hoistable load, create redo block and rest block for each
-  // create a flag for each load, hoist load. 
-  // create map of loads to redoBB's and associated flag
-
   Function *parentFunction = Preheader->getParent();
   Function::iterator fit = parentFunction->getEntryBlock();
   BasicBlock* Entry = (BasicBlock*) fit;
 
-  set<Instruction*>::iterator sit;
-  for (set<Instruction*>::iterator sit = hoistedLoads.begin(), sie = hoistedLoads.end(); sit != sie; ) {
-    Instruction &I = *(*sit++);
-    string opcodeName = string(I.getOpcodeName());
-    //errs() << "Opcode Name: " << opcodeName << '\n';
-    BasicBlock *BB = I.getParent();
-    if (opcodeName == "load" and canHoistLoad(I)) {
-      // split bb here
-      BasicBlock* redoBlock = SplitBlock(BB, &I, this);
-      // redoBlock should point to restBlock
-      BasicBlock* restBlock = SplitEdge(BB, redoBlock, this);
-      Instruction *oldTerminator = BB->getTerminator();
-
-
-      // allocate a flag
-      AllocaInst *flag = new AllocaInst(Type::getInt1Ty(Entry->getContext()), "flag", Entry->getTerminator());
-      StoreInst *ST = new StoreInst(ConstantInt::getFalse(Entry->getContext()), flag, Entry->getTerminator());
-      // add branch to end of first bb,
-      // this puts the loadinst at the back of the bb
-      LoadInst *LD = new LoadInst(flag, "loadflag", oldTerminator);
-      // load the flag into flag, and branch depending on value of flag
-      // if flag is true, which means alias occurs, should branch to fixup block
-      BranchInst::Create(redoBlock, restBlock, LD, oldTerminator);
-      // insert pair of load instruction, redo block to map
-      loadToRedoBlockMap.insert(pair<Instruction*, pair<BasicBlock*, AllocaInst*> >(&I, pair<BasicBlock*, AllocaInst*> (redoBlock, flag)));
-      oldTerminator->eraseFromParent();
-      hoist(I);
-    }
-  } 
-
-  
-  //now that loads have been hoisted out, check if anything else has become invariant just by running another pass?
-  //should modify hoistregion to maybe return set of hoisted instructions
+  // first find all the loads we can hoist
+  set <Instruction*> hoistableLoads = findAllHoistableLoads(L, LI);
+  // get all the stores, so that we can check for aliasing later
+  // TODO: stores might have to be global
+  set <Instruction*> allStores = findAllStores(L);
+  // this next function hoists out each load and creates redo block for it (as well as alias flag), stores it in map
+  map <Instruction*, pair<BasicBlock*,AllocaInst*> > loadToRedoBlockMap = createLoadToRedoBBMap(hoistableLoads, Entry);
+  //now that loads have been hoisted out, check if anything else has become invariant just by running another pass
   set<Instruction*> secondHoistedInstructions = SecondHoistRegion(DT->getNode(L->getHeader()));
   set<Instruction*>::iterator it;  
   map<Instruction*, pair<BasicBlock*, AllocaInst*> >::iterator mit;
@@ -401,33 +420,28 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
   }
 
   
-  // to handle ssa form, each load needs to be modified as follows:  An allocainst needs to be added to the first block of the function, 
+  // to handle ssa form, each load needs to be modified as follows:  An allocainst needs to be added to the entry block of the function, 
   // allocating a stack variable corresponding to the load.  then after the load, we add a store which stores the loaded value into the 
   // allocated stack variable.  now every consumer of the load should also use that stack variable instead of the original loaded register
   // we do this by loading the stack variable into a temporary register, and replacing uses of the load instruction with the temporary register instead
-  map<LoadInst*, AllocaInst*> loadToStackVar; //maps load to its corresponding stack variable
+  map<Instruction*, AllocaInst*> instToStackVar; //maps hoisted instruction to its corresponding stack variable
   for (mit = loadToRedoBlockMap.begin(); mit != loadToRedoBlockMap.end(); ++ mit) {
     LoadInst *load = (LoadInst*) mit->first;
     // each time we load, store value to an allocated stack variable.  then any users of that load should read from stack variable instead
     AllocaInst * stackVar = new AllocaInst(load->getType(), "", Entry->begin());
     StoreInst * storeStack = new StoreInst(load, stackVar);
     storeStack->insertAfter(load);
-    loadToStackVar.insert(pair<LoadInst*, AllocaInst*>(load, stackVar));
-    
-    for (Instruction::use_iterator u = load->use_begin(); u != load->use_end(); u++) {
-      // modify each of its uses
-      User* userInst = (User*)*u;
-      LoadInst *tempReg = new LoadInst(loadToStackVar[load], "tempregister", (Instruction*) userInst);
-      userInst->replaceUsesOfWith(load, tempReg);
-    }
+    instToStackVar.insert(pair<Instruction*, AllocaInst*>((Instruction*)load, stackVar));
+
   }
 
-  // TODO: don't forget, for each hoisted instruction also want to make sure ssa redone in both redo block and in top block
+  // if i clone first, then fix up ssa... what happens?  for fixing up ssa, just check users 
+  // of original clone.  there will be one of each instruction in both fixup block and header
+
   // populate the redo blocks by iterating through each hoisted load, finding all of its uses, and checking whether they were hoisted
   // after all the loads were hoisted (meaning they need to be redone if the load was actually aliased)
-
-  // have to fix up SSA form here too.  So in addition to cloning each load, need to modify it such that each cloned load also stores to corresponding stack variable
-
+  // have to fix up SSA form here too.  So in addition to cloning each load, need to modify it such that each cloned load also stores to corresponding stack variable.  then both load and cloned load refer to same stack variable.  but all the re-hoisted instructions are also cloned...
+  //
   for (mit = loadToRedoBlockMap.begin();  mit != loadToRedoBlockMap.end(); ++mit) {
     // for each hoisted load, check its use list
     LoadInst *load = (LoadInst*) mit->first;
@@ -438,10 +452,11 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
     LoadInst* copyLoad = (LoadInst*) load->clone();
     copyLoad->insertBefore(redoBlock->getTerminator());
     // SSA form
-    StoreInst* storeStack = new StoreInst(copyLoad, loadToStackVar[load]);
+    StoreInst* storeStack = new StoreInst(copyLoad, instToStackVar[(Instruction*)load]);
     storeStack->insertAfter(copyLoad);
     // make set of instructions which depend on load, even indirect dependencies
     set<Instruction*> dependentInstructions;
+
     for (Instruction::use_iterator u = load->use_begin(); u != load->use_end(); u++) {
       // first insert all the directly dependent instructions
       Instruction* directUser = (Instruction*)*u;
@@ -449,42 +464,89 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
     }
     // for each instruction which depends on the load, check for instructions which depend on it which were also hoisted
     // and add them to the set if they were.  Then copy instruction and put it into redo block
+    // TODO: Stores have no type, so a store which was hoisted and is a user will break stuff
+    // this block does preliminary stuff for ssa (allocate and store instruction) and clones each of the hoisted instructions to the
+    // correct locations.  also add a store for each hoisted instruction to store that to a new item
     while (!dependentInstructions.empty()) {
       set<Instruction*>::iterator sit = dependentInstructions.begin();
       Instruction* inst = *sit;
-      dependentInstructions.erase(sit);
+
+      // fix up the second hoisted instructions here too for ssa form too
+      // which means each of the return values should also have an alloca inst in the first function block
+      // and the result of the instruction should be stored to that stack variable again
+      errs() << *(inst->getType()) << '\n';
+      errs() << *inst << '\n';
+
+      if (secondHoistedInstructions.find(inst) != secondHoistedInstructions.end()) {
+	AllocaInst * stackVar = new AllocaInst(inst->getType(), "", Entry->begin());
+	StoreInst * storeStack = new StoreInst(inst, stackVar);
+	storeStack->insertAfter(inst);
+	instToStackVar.insert(pair<Instruction*, AllocaInst*>(inst, stackVar));
+      }
+      
       // check if any of the users of inst were also hoisted, in which case they are a n+1 level dependency
       // and should be inserted into dependent instructions also
       // TODO: somehow have to preserve the order that these instructions are inserted
       for (Instruction::use_iterator u = inst->use_begin(); u != inst->use_end(); u++) {
-	if (secondHoistedInstructions.find((Instruction*)*u) != secondHoistedInstructions.end()) {
-	  dependentInstructions.insert((Instruction*)*u);
+	Instruction * curInst = (Instruction*)*u;
+	if (secondHoistedInstructions.find(curInst) != secondHoistedInstructions.end()) {
+	  dependentInstructions.insert(curInst);
 	}
       }
-      // TODO: update inst to use correct version of load
-      
-      
-
       if (secondHoistedInstructions.find(inst) != secondHoistedInstructions.end()) {
 	// if it is, push copy of the user instruction into redo block
 	Instruction* copyInst = inst->clone();
 	copyInst->insertBefore(redoBlock->getTerminator());
+	// copied instruction should also store to the stack variable
+	StoreInst* copyStore = new StoreInst(copyInst, instToStackVar[inst]);
+	copyStore->insertAfter(copyInst);
 	errs() << "copying dependent instruction to redo block: " << *copyInst << '\n';
       }
+      dependentInstructions.erase(sit);
     }
+
     // clear the flag!
     StoreInst *flagClear = new StoreInst(ConstantInt::getFalse(redoBlock->getContext()), flag, redoBlock->getTerminator());
   }
 
+  // make one last pass through all the users of the hoisted loads/instructions, replacing all operands of any uses
+  // skip users in the preheader, since those are the stores we created up there
+  // first iterate through hoisted loads
 
+  // fix up ssa stuff here. so for each use of a hoisted load replace with using temp register
+  for (mit = loadToRedoBlockMap.begin();  mit != loadToRedoBlockMap.end(); ++mit) {
+    Instruction* hoistedLoad = mit->first;
+    for (Instruction::use_iterator u = hoistedLoad->use_begin(); u != hoistedLoad->use_end(); u++) {
+      	Instruction * user = (Instruction*)*u;
+	// replace uses of hoisted instruction in user instruction
+	if (user->getParent() != Preheader) {
+	  LoadInst *tempReg = new LoadInst(instToStackVar[hoistedLoad], "tempregister",  user);
+	  // not sure if this is the right place to put it?
+	  user->replaceUsesOfWith(hoistedLoad, tempReg);
+	}
+    }
+  }
+
+
+  // do the hoisted instructions too
+  for (it = secondHoistedInstructions.begin();  it != secondHoistedInstructions.end(); ++it) {
+    Instruction* hoistedInst = *it;
+    for (Instruction::use_iterator u = hoistedInst->use_begin(); u != hoistedInst->use_end(); ++u) {
+      	Instruction * user = (Instruction*)*u;
+	// replace uses of hoisted instruction in user instruction
+	if (user->getParent() != Preheader) {
+	  LoadInst *tempReg = new LoadInst(instToStackVar[hoistedInst], "tempregister",  user);
+	  user->replaceUsesOfWith(hoistedInst, tempReg);
+	}
+    }
+  }
 
 
   // check for alias here
   // for each store, check address and see if it matches any load
+  // remember to ignore stores we introduced
   // for each load it matches, set appropriate flag to true
 
-
-  // TODO: when iterating through code to insert fixups, make sure not to skip inner loops
   // end mark stuff
 
 
