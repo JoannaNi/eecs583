@@ -75,6 +75,7 @@ using namespace llvm;
 
 #include <string>
 #include <set>
+#include <vector>
 using namespace std;
 
 STATISTIC(NumSunk      , "Number of instructions sunk out of loop");
@@ -297,7 +298,7 @@ map <Instruction*, pair<BasicBlock*,AllocaInst*> > SLICM::createLoadToRedoBBMap(
 
       // allocate a flag
       AllocaInst *flag = new AllocaInst(Type::getInt1Ty(Entry->getContext()), "flag", Entry->getTerminator());
-      StoreInst *ST = new StoreInst(ConstantInt::getFalse(Entry->getContext()), flag, Entry->getTerminator());
+      StoreInst *ST = new StoreInst(ConstantInt::getTrue(Entry->getContext()), flag, Entry->getTerminator());
       // add branch to end of first bb,
       //// this puts the loadinst at the back of the bb
       LoadInst *LD = new LoadInst(flag, "loadflag", oldTerminator);
@@ -435,9 +436,6 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
 
   }
 
-  // if i clone first, then fix up ssa... what happens?  for fixing up ssa, just check users 
-  // of original clone.  there will be one of each instruction in both fixup block and header
-
   // populate the redo blocks by iterating through each hoisted load, finding all of its uses, and checking whether they were hoisted
   // after all the loads were hoisted (meaning they need to be redone if the load was actually aliased)
   // have to fix up SSA form here too.  So in addition to cloning each load, need to modify it such that each cloned load also stores to corresponding stack variable.  then both load and cloned load refer to same stack variable.  but all the re-hoisted instructions are also cloned...
@@ -474,14 +472,30 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
       // fix up the second hoisted instructions here too for ssa form too
       // which means each of the return values should also have an alloca inst in the first function block
       // and the result of the instruction should be stored to that stack variable again
-      errs() << *(inst->getType()) << '\n';
-      errs() << *inst << '\n';
+      // errs() << *(inst->getType()) << '\n';
+      // errs() << *inst << '\n';
 
       if (secondHoistedInstructions.find(inst) != secondHoistedInstructions.end()) {
-	AllocaInst * stackVar = new AllocaInst(inst->getType(), "", Entry->begin());
+	// check if instruction already has an associated stack variable
+	AllocaInst *stackVar;
+	if (instToStackVar.find(inst) != instToStackVar.end()) {
+	  // already has associated stack variable
+	  stackVar = instToStackVar[inst];
+	  // errs() << "DIFFERS FROM OLD VERSION" << '\n';
+	}
+	else {
+	  stackVar = new AllocaInst(inst->getType(), "", Entry->begin());
+	  instToStackVar.insert(pair<Instruction*, AllocaInst*>(inst, stackVar));
+	}
 	StoreInst * storeStack = new StoreInst(inst, stackVar);
 	storeStack->insertAfter(inst);
-	instToStackVar.insert(pair<Instruction*, AllocaInst*>(inst, stackVar));
+	// copy instruction into redo block
+	Instruction* copyInst = inst->clone();
+	copyInst->insertBefore(redoBlock->getTerminator());
+	// copied instruction should also store to the stack variable
+	StoreInst* copyStore = new StoreInst(copyInst, instToStackVar[inst]);
+	copyStore->insertAfter(copyInst);
+	errs() << "copying dependent instruction to redo block: " << *copyInst << '\n';
       }
       
       // check if any of the users of inst were also hoisted, in which case they are a n+1 level dependency
@@ -493,27 +507,21 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
 	  dependentInstructions.insert(curInst);
 	}
       }
-      if (secondHoistedInstructions.find(inst) != secondHoistedInstructions.end()) {
-	// if it is, push copy of the user instruction into redo block
-	Instruction* copyInst = inst->clone();
-	copyInst->insertBefore(redoBlock->getTerminator());
-	// copied instruction should also store to the stack variable
-	StoreInst* copyStore = new StoreInst(copyInst, instToStackVar[inst]);
-	copyStore->insertAfter(copyInst);
-	errs() << "copying dependent instruction to redo block: " << *copyInst << '\n';
-      }
       dependentInstructions.erase(sit);
     }
 
     // clear the flag!
-    StoreInst *flagClear = new StoreInst(ConstantInt::getFalse(redoBlock->getContext()), flag, redoBlock->getTerminator());
+    // StoreInst *flagClear = new StoreInst(ConstantInt::getFalse(redoBlock->getContext()), flag, redoBlock->getTerminator());
   }
 
   // make one last pass through all the users of the hoisted loads/instructions, replacing all operands of any uses
-  // skip users in the preheader, since those are the stores we created up there
+  // skip users in the preheader, since those are the stores we created up there.  why?
+
   // first iterate through hoisted loads
 
   // fix up ssa stuff here. so for each use of a hoisted load replace with using temp register
+  vector <pair<Instruction*, pair<Instruction*, Instruction*> > >usersToReplaceOperands;
+  vector <pair<Instruction*, pair<Instruction*, Instruction*> > >::iterator iit;
   for (mit = loadToRedoBlockMap.begin();  mit != loadToRedoBlockMap.end(); ++mit) {
     Instruction* hoistedLoad = mit->first;
     for (Instruction::use_iterator u = hoistedLoad->use_begin(); u != hoistedLoad->use_end(); u++) {
@@ -521,8 +529,8 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
 	// replace uses of hoisted instruction in user instruction
 	if (user->getParent() != Preheader) {
 	  LoadInst *tempReg = new LoadInst(instToStackVar[hoistedLoad], "tempregister",  user);
-	  // not sure if this is the right place to put it?
-	  user->replaceUsesOfWith(hoistedLoad, tempReg);
+	  //user->replaceUsesOfWith(hoistedLoad, tempReg);
+	  usersToReplaceOperands.push_back(pair<Instruction*, pair<Instruction*, Instruction*> > (user, pair<Instruction*, Instruction*> (hoistedLoad, tempReg)));
 	}
     }
   }
@@ -536,12 +544,19 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
 	// replace uses of hoisted instruction in user instruction
 	if (user->getParent() != Preheader) {
 	  LoadInst *tempReg = new LoadInst(instToStackVar[hoistedInst], "tempregister",  user);
-	  user->replaceUsesOfWith(hoistedInst, tempReg);
+	  //user->replaceUsesOfWith(hoistedInst, tempReg);
+	  usersToReplaceOperands.push_back(pair<Instruction*, pair<Instruction*, Instruction*> > (user, pair<Instruction*, Instruction*> (hoistedInst, tempReg)));
 	}
     }
   }
-
-
+  
+  for (iit = usersToReplaceOperands.begin(); iit != usersToReplaceOperands.end(); ++ iit) {
+    Instruction* user = iit->first;
+    Instruction* hoistedInst = iit->second.first;
+    Instruction* tempReg = iit->second.second;
+    user->replaceUsesOfWith(hoistedInst, tempReg);
+  }
+  
   // check for alias here
   // for each store, check address and see if it matches any load
   // remember to ignore stores we introduced
