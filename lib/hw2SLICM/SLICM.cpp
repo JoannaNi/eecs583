@@ -170,7 +170,7 @@ namespace {
     /// find all hoistable loads
     set<Instruction*> findAllHoistableLoads(Loop *L, LoopInfo *LI);
     /// find all stores
-    set<Instruction*> findAllStores(Loop *L);
+    set<StoreInst*> findAllStores(Loop *L);
     /// create map from each load to corresponding redo block, and hoist out the loads
     map <Instruction*, pair<BasicBlock*,AllocaInst*> > createLoadToRedoBBMap(set<Instruction*> hoistableLoads, BasicBlock *Entry);
 
@@ -263,15 +263,15 @@ set<Instruction*> SLICM::findAllHoistableLoads(Loop* L, LoopInfo *LI){
   return hoistableLoads;
 }
 
-set<Instruction*> SLICM::findAllStores(Loop *L) {
-  set<Instruction*> allStores;
+set<StoreInst*> SLICM::findAllStores(Loop *L) {
+  set<StoreInst*> allStores;
   for (Loop::block_iterator I = L->block_begin(), E = L->block_end(); I != E; ++I) {
     BasicBlock *BB = *I;
     for (BasicBlock::iterator i = BB->begin(), ie = BB->end(); i!= ie; ) {
       Instruction &I = *i++;
       string opcodeName = string(I.getOpcodeName());
       if (opcodeName == "store") {
-	allStores.insert(&I);
+	allStores.insert((StoreInst*)&I);
       }
     }
   }
@@ -298,7 +298,7 @@ map <Instruction*, pair<BasicBlock*,AllocaInst*> > SLICM::createLoadToRedoBBMap(
 
       // allocate a flag
       AllocaInst *flag = new AllocaInst(Type::getInt1Ty(Entry->getContext()), "flag", Entry->getTerminator());
-      StoreInst *ST = new StoreInst(ConstantInt::getTrue(Entry->getContext()), flag, Entry->getTerminator());
+      StoreInst *ST = new StoreInst(ConstantInt::getFalse(Entry->getContext()), flag, Entry->getTerminator());
       // add branch to end of first bb,
       //// this puts the loadinst at the back of the bb
       LoadInst *LD = new LoadInst(flag, "loadflag", oldTerminator);
@@ -407,7 +407,7 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
   set <Instruction*> hoistableLoads = findAllHoistableLoads(L, LI);
   // get all the stores, so that we can check for aliasing later
   // TODO: stores might have to be global
-  set <Instruction*> allStores = findAllStores(L);
+  set <StoreInst*> allStores = findAllStores(L);
   // this next function hoists out each load and creates redo block for it (as well as alias flag), stores it in map
   map <Instruction*, pair<BasicBlock*,AllocaInst*> > loadToRedoBlockMap = createLoadToRedoBBMap(hoistableLoads, Entry);
   //now that loads have been hoisted out, check if anything else has become invariant just by running another pass
@@ -417,7 +417,7 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
   // we have list of instructions which were hoisted after loads were hoisted
   // and map from hoisted load to redo basic block
   for (it = secondHoistedInstructions.begin();  it != secondHoistedInstructions.end(); ++it) {
-    errs() << "Hoisted instruction: " << **it << '\n';
+    //errs() << "Hoisted instruction: " << **it << '\n';
   }
 
   
@@ -495,7 +495,7 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
 	// copied instruction should also store to the stack variable
 	StoreInst* copyStore = new StoreInst(copyInst, instToStackVar[inst]);
 	copyStore->insertAfter(copyInst);
-	errs() << "copying dependent instruction to redo block: " << *copyInst << '\n';
+	//errs() << "copying dependent instruction to redo block: " << *copyInst << '\n';
       }
       
       // check if any of the users of inst were also hoisted, in which case they are a n+1 level dependency
@@ -511,7 +511,7 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
     }
 
     // clear the flag!
-    // StoreInst *flagClear = new StoreInst(ConstantInt::getFalse(redoBlock->getContext()), flag, redoBlock->getTerminator());
+    StoreInst *flagClear = new StoreInst(ConstantInt::getFalse(redoBlock->getContext()), flag, redoBlock->getTerminator());
   }
 
   // make one last pass through all the users of the hoisted loads/instructions, replacing all operands of any uses
@@ -529,7 +529,6 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
 	// replace uses of hoisted instruction in user instruction
 	if (user->getParent() != Preheader) {
 	  LoadInst *tempReg = new LoadInst(instToStackVar[hoistedLoad], "tempregister",  user);
-	  //user->replaceUsesOfWith(hoistedLoad, tempReg);
 	  usersToReplaceOperands.push_back(pair<Instruction*, pair<Instruction*, Instruction*> > (user, pair<Instruction*, Instruction*> (hoistedLoad, tempReg)));
 	}
     }
@@ -544,7 +543,6 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
 	// replace uses of hoisted instruction in user instruction
 	if (user->getParent() != Preheader) {
 	  LoadInst *tempReg = new LoadInst(instToStackVar[hoistedInst], "tempregister",  user);
-	  //user->replaceUsesOfWith(hoistedInst, tempReg);
 	  usersToReplaceOperands.push_back(pair<Instruction*, pair<Instruction*, Instruction*> > (user, pair<Instruction*, Instruction*> (hoistedInst, tempReg)));
 	}
     }
@@ -558,10 +556,59 @@ bool SLICM::runOnLoop(Loop *L, LPPassManager &LPM) {
   }
   
   // check for alias here
-  // for each store, check address and see if it matches any load
-  // remember to ignore stores we introduced
+  // for each load, check all existing stores
   // for each load it matches, set appropriate flag to true
-
+  // TODO: also set stores map to be global
+  set<StoreInst*>::iterator sit;
+  for (mit = loadToRedoBlockMap.begin(); mit != loadToRedoBlockMap.end(); ++mit) {
+      // or the result of the existing load flag with itself and the new comparison
+      Instruction* hoistedLoad = mit->first;
+      BasicBlock* redoBlock = mit->second.first;
+      AllocaInst *flag = mit->second.second;
+      Value* load_operand = hoistedLoad->getOperand(0);
+      errs() << "load operand 0: " << *load_operand << '\n';
+      // PtrToIntInst *loadLoc = new PtrToIntInst(load_operand, Type::getInt64Ty(redoBlock->getParent()->getContext()),"conv");
+      for (sit = allStores.begin(); sit != allStores.end(); ++sit) {
+	StoreInst* store = *sit;
+	Value* store_operand = store->getOperand(1);
+	errs() << "store operand 1: " << *store_operand << '\n';
+	// PtrToIntInst *storeLoc = new PtrToIntInst(store_operand, Type::getInt64Ty(redoBlock->getParent()->getContext()),"conv");
+	
+	// ICmpInst *aliasCheck = new ICmpInst(ICmpInst::ICMP_EQ, loadLoc, storeLoc, "cmp");
+	if (load_operand->getType() == store_operand->getType()) {
+	  // compare store destination and load source with aliasCheck, pull old flag val with oldFlagVal
+	  // store aliasCheck result into new stack variable, pull into aliasVal
+	  // or aliasVal and oldFlagVal, store result back into flag
+	  errs() << "matching type\n";
+	  // aliasCheck contains equality of load operand and store operand
+	  ICmpInst *aliasCheck = new ICmpInst(ICmpInst::ICMP_EQ, load_operand, store_operand, "cmp");
+	  errs() << "alias check: " << *aliasCheck << '\n';
+	  aliasCheck->insertAfter(store);
+	  // if alias check or the flag is already set, flag should be set to true after this
+	  // oldFlagVal loads value of flag
+	  LoadInst *oldFlagVal = new LoadInst(flag, "oldFlagVal");
+	  errs() << "old flag val: " << *oldFlagVal << '\n';
+	  oldFlagVal->insertAfter(aliasCheck);
+	  // allocate stack variable to put value of aliascheck
+	  AllocaInst *aliasCheckStackVar = new AllocaInst(aliasCheck->getType(),"aliasCheckStackVar");
+	  aliasCheckStackVar->insertAfter(oldFlagVal);
+	  // store aliascheck value into aliascheckstackvar
+	  StoreInst *setAliasCheckStackVar = new StoreInst(aliasCheck, aliasCheckStackVar);
+	  setAliasCheckStackVar->insertAfter(aliasCheckStackVar);
+	  // load aliascheck stack variable into aliasVal
+	  LoadInst *aliasVal = new LoadInst(aliasCheckStackVar, "aliasVal");
+	  aliasVal->insertAfter(setAliasCheckStackVar);
+	  errs() << "alias value: " << *aliasVal << '\n';
+	  BinaryOperator* flagValue = BinaryOperator::Create(Instruction::Or, aliasVal, oldFlagVal, "flag.ORed");
+	  flagValue->insertAfter(aliasVal);
+	  errs() << "binary or instruction: " << *flagValue << '\n';
+	  // update the correct flag
+	  StoreInst *flagUpdate = new StoreInst(flagValue, flag);
+	  errs() << "store updated flag value: " << *flagUpdate << '\n';
+	  flagUpdate->insertAfter(flagValue);
+	}
+      }
+  }
   // end mark stuff
 
 
